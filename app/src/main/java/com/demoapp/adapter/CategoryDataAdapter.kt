@@ -11,6 +11,7 @@ import com.demoapp.R
 import com.demoapp.model.DataEntity
 import de.hdodenhof.circleimageview.CircleImageView
 
+
 class CategoryDataAdapter() :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -23,6 +24,7 @@ class CategoryDataAdapter() :
         this.list = list
         notifyDataSetChanged()
     }
+
 
     var list: List<DataEntity> = emptyList()
 
@@ -54,7 +56,8 @@ class CategoryDataAdapter() :
         }
         return DataHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_data, parent, false)
-        )
+            )
+        }
     }
 
     override fun getItemCount(): Int {

@@ -36,6 +36,7 @@ class MainActivityViewModel @Inject constructor(dataDuo: DataDuo, mService: Retr
     }
 
     init {
+
         populateData()
 
         if (allCategoryList.value.isNullOrEmpty())
