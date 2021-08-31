@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:gravity="center"
+    android:layout_height="80dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
+    android:background="@android:color/white"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_launcher_background"
+        app:civ_border_color="@android:color/holo_red_dark"
+        app:civ_border_width="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_launcher_background"
-            app:civ_border_color="@android:color/holo_red_dark"
-            app:civ_border_width="2dp" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/data_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="@integer/material_motion_duration_long_1"
+        android:gravity="center_vertical"
+        android:text="category name"
+        android:textColor="@color/purple_500"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/arrow"
+        app:layout_constraintStart_toEndOf="@+id/image"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/data_name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"
-            android:gravity="center_vertical"
-            android:text="category name"
-            android:textStyle="bold"
-            android:textColor="@color/purple_500"
-            android:textSize="20sp" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/right_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/right_arrow" />
-
-    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="30dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
         android:src="@color/light_grey"
-        android:background="@color/white" />
+        app:layout_constraintTop_toBottomOf="@id/image" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

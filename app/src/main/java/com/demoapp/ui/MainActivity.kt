@@ -9,23 +9,25 @@ import androidx.lifecycle.ViewModelProvider
 import com.demoapp.App
 import com.demoapp.R
 import com.demoapp.adapter.CategoryDataAdapter
+import com.demoapp.extension.getViewModel
 import com.demoapp.viewmodel.MainActivityViewModel
-import com.demoapp.viewmodel.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var viewModel: MainActivityViewModel
-
     @Inject
-    lateinit var mainViewModelFactory: MainViewModelFactory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: MainActivityViewModel by lazy {
+        getViewModel(viewModelFactory)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var categoryDataAdapter = CategoryDataAdapter(this@MainActivity)
+        var categoryDataAdapter = CategoryDataAdapter()
         recycleList.adapter = categoryDataAdapter
 
         supportActionBar?.title= ""
@@ -33,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         (application as App).getAppComponent().inject(this)
 
-        viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainActivityViewModel::class.java)
         viewModel.getDataObserver().observe(this, {
             if (!it.isNullOrEmpty()) {
                 categoryDataAdapter.setData(it)

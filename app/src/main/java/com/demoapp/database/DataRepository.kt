@@ -1,16 +1,16 @@
 package com.demoapp.database
 
-import android.util.Log
 import com.demoapp.model.CategoryEntity
 import com.demoapp.model.DataEntity
 import com.demoapp.model.DataResponse
 import com.demoapp.retrofit.RetrofitInterface
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DataRepository(var dataDuo: DataDuo, val mService: RetrofitInterface) {
+class DataRepository @Inject constructor(val dataDuo: DataDuo, val mService: RetrofitInterface) {
 
-    fun getLocalData(result: (List<DataEntity>) -> Unit) {
+    suspend fun getLocalData(): List<DataEntity> {
         var resultList = arrayListOf<DataEntity>()
         val categories = dataDuo.getAllCategories()
         val dataList = dataDuo.getData()
@@ -36,32 +36,20 @@ class DataRepository(var dataDuo: DataDuo, val mService: RetrofitInterface) {
             })
         }
 
-        result.invoke(resultList)
+        return resultList
     }
 
-    fun getCategoryData(result: (Boolean) -> Unit) {
-        val call: Call<DataResponse> =
-            mService.getCategoryWithData("89359ade-c88d-4048-815d-2e1e652728f7")
+    suspend fun getCategoryData() {
+        val response = mService.getCategoryWithData("89359ade-c88d-4048-815d-2e1e652728f7")
 
-
-        call.enqueue(object : Callback<DataResponse> {
-            override fun onResponse(
-                call: Call<DataResponse>,
-                response: retrofit2.Response<DataResponse>
-            ) {
-                Log.d("", "")
+        withContext(Dispatchers.Main) {
+            if (response.isSuccessful) {
                 response.body()?.let { insertCategoryData(it) }
-                result.invoke(true)
             }
-
-            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                Log.d("", "")
-                result.invoke(false)
-            }
-        })
+        }
     }
 
-    fun insertCategoryData(response: DataResponse) {
+    private suspend fun insertCategoryData(response: DataResponse) {
         if (!response.isNullOrEmpty()) {
             dataDuo.removeCategoryData()
             dataDuo.removeData()

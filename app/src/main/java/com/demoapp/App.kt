@@ -6,7 +6,7 @@ import com.demoapp.dagger.AppComponentProvider
 import com.demoapp.dagger.AppModule
 import com.demoapp.dagger.DaggerAppComponent
 
-class App : Application() , AppComponentProvider{
+class App : Application() , AppComponentProvider {
 
     private lateinit var appComponent: AppComponent
 

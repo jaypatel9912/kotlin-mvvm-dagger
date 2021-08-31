@@ -30,9 +30,4 @@ class AppModule(private val application: Application) {
         return application.applicationContext
     }
 
-    @Provides
-    fun provideApplication(): Application {
-        return application
-    }
-
 }

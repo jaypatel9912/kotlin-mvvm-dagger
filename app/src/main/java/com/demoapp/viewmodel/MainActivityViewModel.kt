@@ -1,21 +1,23 @@
 package com.demoapp.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.demoapp.App
-import com.demoapp.retrofit.RetrofitInterface
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.demoapp.database.DataDuo
 import com.demoapp.database.DataRepository
 import com.demoapp.model.DataEntity
+import com.demoapp.retrofit.RetrofitInterface
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivityViewModel(application: Application, dataDuo: DataDuo, mService: RetrofitInterface) : AndroidViewModel(application) {
+class MainActivityViewModel @Inject constructor(dataDuo: DataDuo, mService: RetrofitInterface) :
+    ViewModel() {
 
     private var dataRepository = DataRepository(dataDuo, mService)
 
     private var allCategoryList: MutableLiveData<List<DataEntity>> = MutableLiveData()
-    fun getDataObserver(): MutableLiveData<List<DataEntity>> {
+    fun getDataObserver(): LiveData<List<DataEntity>> {
         return allCategoryList
     }
 
@@ -39,19 +41,18 @@ class MainActivityViewModel(application: Application, dataDuo: DataDuo, mService
         if (allCategoryList.value.isNullOrEmpty())
             showLoader.postValue(true)
 
-        dataRepository.getCategoryData(result = { isSuccess ->
+        viewModelScope.launch {
+            dataRepository.getCategoryData()
             showLoader.postValue(false)
-            if (!isSuccess)
-                message.postValue("Something went wrong. Please try again.")
-            else
-                populateData()
-        })
+            populateData()
+        }
     }
 
-    fun populateData() {
-        dataRepository.getLocalData(result = { resultList ->
+    private fun populateData() {
+        viewModelScope.launch {
+            val resultList = dataRepository.getLocalData()
             allCategoryList.postValue(resultList)
-        })
+        }
     }
 
 }
