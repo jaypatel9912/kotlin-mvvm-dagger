@@ -25,6 +25,7 @@ class MainActivityViewModel @Inject constructor(private val dataRepository: Data
     }
 
     init {
+
         populateData()
 
         if (_allCategoryList.value.isNullOrEmpty())

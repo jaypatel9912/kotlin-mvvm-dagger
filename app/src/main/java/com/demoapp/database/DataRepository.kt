@@ -1,5 +1,6 @@
 package com.demoapp.database
 
+
 import com.demoapp.model.CategoryEntity
 import com.demoapp.model.DataEntity
 import com.demoapp.model.DataResponse
