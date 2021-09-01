@@ -16,8 +16,8 @@
         android:src="@drawable/ic_launcher_background"
         app:civ_border_color="@android:color/holo_red_dark"
         app:civ_border_width="2dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -32,7 +32,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/arrow"
-        app:layout_constraintStart_toEndOf="@+id/image"/>
+        app:layout_constraintStart_toEndOf="@+id/image" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/arrow"
@@ -41,16 +41,16 @@
         android:layout_marginRight="15dp"
         android:src="@drawable/right_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="60dp"
-        android:layout_marginRight="30dp"
         android:layout_marginTop="12dp"
+        android:layout_marginRight="30dp"
         android:background="@color/white"
         android:src="@color/light_grey"
         app:layout_constraintTop_toBottomOf="@id/image" />

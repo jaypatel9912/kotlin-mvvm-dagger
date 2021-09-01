@@ -1,6 +1,5 @@
 package com.demoapp.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import com.demoapp.R
 import com.demoapp.model.DataEntity
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CategoryDataAdapter() :
+class CategoryDataAdapter :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {

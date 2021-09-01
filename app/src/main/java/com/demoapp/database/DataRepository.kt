@@ -8,35 +8,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DataRepository @Inject constructor(val dataDuo: DataDuo, val mService: RetrofitInterface) {
+class DataRepository @Inject constructor(
+    private val dataDuo: DataDuo,
+    private val mService: RetrofitInterface
+) {
 
     suspend fun getLocalData(): List<DataEntity> {
-        var resultList = arrayListOf<DataEntity>()
         val categories = dataDuo.getAllCategories()
         val dataList = dataDuo.getData()
 
-        categories.forEach { category ->
-            resultList.add(
-                DataEntity(
-                    name = "",
-                    description = "",
-                    price = 0.0,
-                    image_link = "",
-                    product_id = "",
-                    category_name = category.name,
-                    is_category = true
+        return arrayListOf<DataEntity>().apply {
+            categories.forEach {
+                add(
+                    DataEntity(
+                        name = "",
+                        description = "",
+                        price = 0.0,
+                        image_link = "",
+                        product_id = "",
+                        category_name = it.name,
+                        is_category = true
+                    )
                 )
-            )
-
-            resultList.addAll(dataList.filter {
-                it.category_name.equals(
-                    category.name,
-                    ignoreCase = true
-                )
-            })
-        }
-
-        return resultList
+                addAll(dataList.filter { dataEntity ->
+                    dataEntity.category_name.equals(it.name, ignoreCase = true)
+                })
+            }
+        }.toList()
     }
 
     suspend fun getCategoryData() {

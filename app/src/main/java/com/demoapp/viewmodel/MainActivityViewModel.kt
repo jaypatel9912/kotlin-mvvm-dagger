@@ -1,49 +1,38 @@
 package com.demoapp.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.demoapp.database.DataDuo
 import com.demoapp.database.DataRepository
 import com.demoapp.model.DataEntity
-import com.demoapp.retrofit.RetrofitInterface
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivityViewModel @Inject constructor(dataDuo: DataDuo, mService: RetrofitInterface) :
+class MainActivityViewModel @Inject constructor(private val dataRepository: DataRepository) :
     ViewModel() {
 
-    private var dataRepository = DataRepository(dataDuo, mService)
+    private var _allCategoryList = MutableStateFlow<List<DataEntity>>(emptyList())
+    private var _showLoader = MutableStateFlow(false)
+    private var _message = MutableStateFlow("")
 
-    private var allCategoryList: MutableLiveData<List<DataEntity>> = MutableLiveData()
-    fun getDataObserver(): LiveData<List<DataEntity>> {
-        return allCategoryList
-    }
-
-    private var showLoader: MutableLiveData<Boolean> = MutableLiveData()
-    fun getLoaderObserver(): MutableLiveData<Boolean> {
-        return showLoader
-    }
-
-    private var message: MutableLiveData<String> = MutableLiveData()
-    fun getMessageObserver(): MutableLiveData<String> {
-        return message
-    }
+    val categoryList: Flow<List<DataEntity>> = _allCategoryList
+    val showLoader: Flow<Boolean> = _showLoader
+    val message: Flow<String> = _message
 
     fun setMessage(msg: String) {
-        message.postValue(msg)
+        _message.value = msg
     }
 
     init {
         populateData()
 
-        if (allCategoryList.value.isNullOrEmpty())
-            showLoader.postValue(true)
+        if (_allCategoryList.value.isNullOrEmpty())
+            _showLoader.value = true
 
         viewModelScope.launch {
             dataRepository.getCategoryData()
-            showLoader.postValue(false)
+            _showLoader.value = false
             populateData()
         }
     }
@@ -51,7 +40,7 @@ class MainActivityViewModel @Inject constructor(dataDuo: DataDuo, mService: Retr
     private fun populateData() {
         viewModelScope.launch {
             val resultList = dataRepository.getLocalData()
-            allCategoryList.postValue(resultList)
+            _allCategoryList.value = resultList
         }
     }
 
