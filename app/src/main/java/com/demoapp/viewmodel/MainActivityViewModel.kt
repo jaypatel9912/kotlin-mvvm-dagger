@@ -25,7 +25,6 @@ class MainActivityViewModel @Inject constructor(private val dataRepository: Data
     }
 
     init {
-
         populateData()
 
         if (_allCategoryList.value.isNullOrEmpty())
@@ -44,5 +43,4 @@ class MainActivityViewModel @Inject constructor(private val dataRepository: Data
             _allCategoryList.value = resultList
         }
     }
-
 }

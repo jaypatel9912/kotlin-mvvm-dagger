@@ -16,8 +16,6 @@ abstract class ViewModelModule {
     @ViewModelMapKey(MainActivityViewModel::class)
     abstract fun bindMainActivityViewModel(viewModel: MainActivityViewModel): ViewModel
 
-
     @Binds
     abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
-
 }

@@ -2,6 +2,7 @@ package com.demoapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -23,14 +24,13 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as App).getAppComponent().inject(this)
 
         setContentView(R.layout.activity_main)
 
-        var categoryDataAdapter = CategoryDataAdapter()
+        val categoryDataAdapter = CategoryDataAdapter()
         recycleList.adapter = categoryDataAdapter
 
         supportActionBar?.title = ""
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             viewModel.message.collectLatest {
-                if (!it.isNullOrEmpty()) {
+                if (!TextUtils.isEmpty(it)) {
                     Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
                     viewModel.setMessage("")
                 }

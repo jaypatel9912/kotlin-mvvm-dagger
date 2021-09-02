@@ -21,5 +21,4 @@ class App : Application() , AppComponentProvider {
     override fun getAppComponent(): AppComponent {
         return appComponent
     }
-
 }

@@ -1,4 +1,3 @@
-/* (c) Disney. All rights reserved. */
 package com.demoapp.dagger
 
 import androidx.lifecycle.ViewModel

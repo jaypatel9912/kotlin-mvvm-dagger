@@ -1,6 +1,5 @@
 package com.demoapp.database
 
-
 import com.demoapp.model.CategoryEntity
 import com.demoapp.model.DataEntity
 import com.demoapp.model.DataResponse
@@ -18,24 +17,21 @@ class DataRepository @Inject constructor(
         val categories = dataDuo.getAllCategories()
         val dataList = dataDuo.getData()
 
-        return arrayListOf<DataEntity>().apply {
-            categories.forEach {
-                add(
-                    DataEntity(
-                        name = "",
-                        description = "",
-                        price = 0.0,
-                        image_link = "",
-                        product_id = "",
-                        category_name = it.name,
-                        is_category = true
-                    )
+        return categories.flatMap {
+            listOf(
+                DataEntity(
+                    name = "",
+                    description = "",
+                    price = 0.0,
+                    image_link = "",
+                    product_id = "",
+                    category_name = it.name,
+                    is_category = true
                 )
-                addAll(dataList.filter { dataEntity ->
-                    dataEntity.category_name.equals(it.name, ignoreCase = true)
-                })
-            }
-        }.toList()
+            ).plus(dataList.filter { dataEntity ->
+                dataEntity.category_name == it.name
+            })
+        }
     }
 
     suspend fun getCategoryData() {
@@ -72,5 +68,4 @@ class DataRepository @Inject constructor(
             }
         }
     }
-
 }
