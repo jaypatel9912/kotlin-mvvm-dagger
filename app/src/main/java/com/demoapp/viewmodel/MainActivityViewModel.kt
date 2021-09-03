@@ -1,65 +1,46 @@
 package com.demoapp.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import com.demoapp.App
-import com.demoapp.retrofit.RetrofitInterface
-import com.demoapp.database.DataDuo
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.demoapp.database.DataRepository
 import com.demoapp.model.DataEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+class MainActivityViewModel @Inject constructor(private val dataRepository: DataRepository) :
+    ViewModel() {
 
-    @Inject
-    lateinit var dataDuo: DataDuo
+    private var _allCategoryList = MutableStateFlow<List<DataEntity>>(emptyList())
+    private var _showLoader = MutableStateFlow(false)
+    private var _message = MutableStateFlow("")
 
-    @Inject
-    lateinit var mService: RetrofitInterface
-
-    private var dataRepository: DataRepository
-
-    private var allCategoryList: MutableLiveData<List<DataEntity>> = MutableLiveData()
-    fun getDataObserver(): MutableLiveData<List<DataEntity>> {
-        return allCategoryList
-    }
-
-    private var showLoader: MutableLiveData<Boolean> = MutableLiveData()
-    fun getLoaderObserver(): MutableLiveData<Boolean> {
-        return showLoader
-    }
-
-    private var message: MutableLiveData<String> = MutableLiveData()
-    fun getMessageObserver(): MutableLiveData<String> {
-        return message
-    }
+    val categoryList: Flow<List<DataEntity>> = _allCategoryList
+    val showLoader: Flow<Boolean> = _showLoader
+    val message: Flow<String> = _message
 
     fun setMessage(msg: String) {
-        message.postValue(msg)
+        _message.value = msg
     }
 
     init {
-        (application as App).getAppComponent().inject(this)
-        dataRepository = DataRepository(dataDuo, mService)
         populateData()
 
-        if (allCategoryList.value.isNullOrEmpty())
-            showLoader.postValue(true)
+        if (_allCategoryList.value.isNullOrEmpty())
+            _showLoader.value = true
 
-        dataRepository.getCategoryData(result = { isSuccess ->
-            showLoader.postValue(false)
-            if (!isSuccess)
-                message.postValue("Something went wrong. Please try again.")
-            else
-                populateData()
-        })
+        viewModelScope.launch {
+            dataRepository.getCategoryData()
+            _showLoader.value = false
+            populateData()
+        }
     }
 
     private fun populateData() {
-        dataRepository.getLocalData(result = { resultList ->
-            allCategoryList.postValue(resultList)
-        })
+        viewModelScope.launch {
+            val resultList = dataRepository.getLocalData()
+            _allCategoryList.value = resultList
+        }
     }
-
 }

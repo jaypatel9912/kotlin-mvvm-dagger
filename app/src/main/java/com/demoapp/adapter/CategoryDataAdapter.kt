@@ -1,6 +1,5 @@
 package com.demoapp.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import com.demoapp.R
 import com.demoapp.model.DataEntity
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CategoryDataAdapter(context: Context) :
+class CategoryDataAdapter :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -24,7 +23,6 @@ class CategoryDataAdapter(context: Context) :
         notifyDataSetChanged()
     }
 
-    private val context: Context = context
     var list: List<DataEntity> = emptyList()
 
     private inner class CategoryHolder(itemView: View) :
@@ -50,11 +48,11 @@ class CategoryDataAdapter(context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_CATEGORY) {
             return CategoryHolder(
-                LayoutInflater.from(context).inflate(R.layout.item_category, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
             )
         }
         return DataHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_data, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_data, parent, false)
         )
     }
 
