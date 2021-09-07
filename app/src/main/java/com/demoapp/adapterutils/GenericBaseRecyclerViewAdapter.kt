@@ -3,13 +3,12 @@ package com.demoapp.adapterutils
 import android.view.ViewGroup
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.common.collect.Lists
 import java.lang.IllegalStateException
 
 open class GenericBaseRecyclerViewAdapter<T : RecyclerViewType?> :
     RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private var delegateAdapters: SparseArrayCompat<DelegateAdapter<RecyclerView.ViewHolder, RecyclerViewType>>
-    protected val items: MutableList<T> = Lists.newArrayList()
+    protected val items: MutableList<T> = mutableListOf()
 
     constructor() {
         delegateAdapters = SparseArrayCompat<DelegateAdapter<RecyclerView.ViewHolder, RecyclerViewType>>()
@@ -126,7 +125,7 @@ open class GenericBaseRecyclerViewAdapter<T : RecyclerViewType?> :
         var pos = position
         ++pos
         if (pos > -1 && pos < items.size) {
-            val itemsToRemove: List<T> = Lists.newArrayList(items.subList(pos, items.size))
+            val itemsToRemove: List<T> = items.subList(pos, items.size)
             items.removeAll(itemsToRemove)
             notifyItemRangeRemoved(pos, itemsToRemove.size)
         }
