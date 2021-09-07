@@ -2,27 +2,27 @@ package com.demoapp.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.demoapp.model.CategoryEntity
 import com.demoapp.model.DataEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DataDuo {
+
     @Query("SELECT  * FROM category_entity")
-    suspend fun getAllCategories(): List<CategoryEntity>
+    fun getAllCategories(): Flow<List<CategoryEntity>>
 
-    @Insert
-    suspend fun insertCategories(categoryEntity: CategoryEntity)
-
-    @Query("DELETE FROM category_entity")
-    suspend fun removeCategoryData()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @JvmSuppressWildcards
+    suspend fun insertAllCategories(categoryEntity: List<CategoryEntity>)
 
     @Query("SELECT  * FROM data_entity")
-    suspend fun getData(): List<DataEntity>
+    fun getData(): Flow<List<DataEntity>>
 
-    @Insert
-    suspend fun insertData(dataEntity: DataEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @JvmSuppressWildcards
+    suspend fun insertAllSubCategories(dataEntity: List<DataEntity>)
 
-    @Query("DELETE FROM data_entity")
-    suspend fun removeData()
 }

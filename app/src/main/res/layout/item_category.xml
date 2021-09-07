@@ -13,7 +13,7 @@
         android:background="@drawable/blue_rounded"
         android:gravity="center_vertical"
         android:paddingStart="50dp"
-        android:text="category name"
+        android:paddingEnd="10dp"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold"
