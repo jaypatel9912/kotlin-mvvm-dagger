@@ -16,7 +16,7 @@ class MainActivityViewModel @Inject constructor(private val dataRepository: Data
     private var _showLoader = MutableStateFlow(false)
     private var _message = MutableStateFlow("")
 
-    var categoryList: Flow<List<RecyclerViewType>> = dataRepository.getLocalData()
+    val categoryList: Flow<List<RecyclerViewType>> = dataRepository.getLocalData()
     val showLoader: Flow<Boolean> = _showLoader
     val message: Flow<String> = _message
 
@@ -39,10 +39,7 @@ class MainActivityViewModel @Inject constructor(private val dataRepository: Data
 
     private fun getDataFromApi() {
         viewModelScope.launch {
-            val res = dataRepository.getCategoryData()
-            if (res != null) {
-                dataRepository.insertData(res)
-            }
+             dataRepository.getCategoryData()
             _showLoader.value = false
         }
     }

@@ -1,12 +1,10 @@
 package com.demoapp.adapterutils
 
-import android.content.Context
-
 /**
  * Recycler adapter used to display the different More screen sections.
  * @author roger.cotrina, VELEJ097
  */
-open class BaseAdapter(map: HashMap<Int, DelegateAdapter<*, *>>, val context: Context) :
+open class BaseAdapter(map: HashMap<Int, DelegateAdapter<*, *>>) :
     GenericBaseRecyclerViewAdapter<RecyclerViewType>(map) {
 
     /**

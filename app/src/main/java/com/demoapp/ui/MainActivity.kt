@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val map = HashMap<Int, DelegateAdapter<*, *>>()
         map[AdapterConstants.LIST_ITEM_CATEGORY] = CategoryViewDA()
         map[AdapterConstants.LIST_ITEM_DATA] = DataViewDA()
-        categoryDataAdapter = BaseAdapter(map, this@MainActivity)
+        categoryDataAdapter = BaseAdapter(map)
         recycleList.adapter = categoryDataAdapter
     }
 
