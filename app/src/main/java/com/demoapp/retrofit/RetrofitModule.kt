@@ -8,6 +8,7 @@ import javax.inject.Singleton
 
 @Module
 class RetrofitModule {
+
     val baseUrl = "https://run.mocky.io/"
 
     @Singleton
@@ -23,4 +24,5 @@ class RetrofitModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
 }

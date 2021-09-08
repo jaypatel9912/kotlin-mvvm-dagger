@@ -28,4 +28,5 @@ class AppModule(private val application: Application) {
     fun provideAppContext(): Context {
         return application.applicationContext
     }
+
 }

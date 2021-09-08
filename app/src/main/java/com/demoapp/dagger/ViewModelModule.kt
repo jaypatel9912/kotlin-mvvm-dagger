@@ -18,4 +18,5 @@ abstract class ViewModelModule {
 
     @Binds
     abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
+
 }

@@ -1,71 +1,77 @@
 package com.demoapp.database
 
+import com.demoapp.adapter.CategoryViewRM
+import com.demoapp.adapter.DataViewRM
+import com.demoapp.adapterutils.RecyclerViewType
 import com.demoapp.model.CategoryEntity
 import com.demoapp.model.DataEntity
 import com.demoapp.model.DataResponse
 import com.demoapp.retrofit.RetrofitInterface
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(
-    private val dataDuo: DataDuo,
+    private val dataSource: DataSource,
     private val mService: RetrofitInterface
 ) {
 
-    suspend fun getLocalData(): List<DataEntity> {
-        val categories = dataDuo.getAllCategories()
-        val dataList = dataDuo.getData()
+    fun getLocalData(): Flow<List<RecyclerViewType>> = runBlocking {
 
-        return categories.flatMap {
-            listOf(
-                DataEntity(
-                    name = "",
-                    description = "",
-                    price = 0.0,
-                    image_link = "",
-                    product_id = "",
-                    category_name = it.name,
-                    is_category = true
+        val categories = dataSource.getAllCategories()
+        val data = dataSource.getData()
+
+        return@runBlocking categories.combine(data) { category, dataEntity ->
+            category.flatMap {
+                listOf(
+                    CategoryViewRM(it.name)
+                ).plus(
+                    dataEntity.filter { dataEntity ->
+                        dataEntity.categoryName == it.name
+                    }.map { dataEntity ->
+                        DataViewRM(
+                            dataEntity.name, dataEntity.imageLink
+                        )
+                    }
                 )
-            ).plus(dataList.filter { dataEntity ->
-                dataEntity.category_name == it.name
-            })
+            }
         }
     }
 
     suspend fun getCategoryData() {
         val response = mService.getCategoryWithData("89359ade-c88d-4048-815d-2e1e652728f7")
-
         withContext(Dispatchers.Main) {
             if (response.isSuccessful) {
-                response.body()?.let { insertCategoryData(it) }
+                response.body()?.let { insertData(it) }
             }
         }
     }
 
-    private suspend fun insertCategoryData(response: DataResponse) {
+    private suspend fun insertData(response: DataResponse) {
         if (!response.isNullOrEmpty()) {
-            dataDuo.removeCategoryData()
-            dataDuo.removeData()
 
-            response.forEach { category ->
-                dataDuo.insertCategories(CategoryEntity(name = category.category))
+            dataSource.insertAllCategories(response.map {
+                CategoryEntity(name = it.category)
+            })
 
-                category.items.forEach {
-                    dataDuo.insertData(
+            dataSource.insertAllSubCategories(
+                response.map {
+                    it.items.map { item ->
                         DataEntity(
-                            name = it.name,
-                            description = it.description,
-                            price = it.price,
-                            image_link = it.image_link,
-                            product_id = it.product_id,
-                            category_name = category.category,
-                            is_category = false
+                            name = item.name,
+                            description = item.description,
+                            price = item.price,
+                            imageLink = item.imageLink,
+                            productId = item.productId,
+                            categoryName = it.category,
                         )
-                    )
-                }
-            }
+                    }
+                }.flatten()
+            )
         }
     }
+
 }
